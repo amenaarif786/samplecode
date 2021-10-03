@@ -1,0 +1,33 @@
+version: "3"
+services:
+  mysqldb:
+    image: mysql:8
+    volumes:
+      - db_data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=inventory
+    ports:
+      - "3306:3306"
+    networks:
+      - backend
+
+  sampleapp:
+    container_name: sampleapp
+    build: .
+    ports:
+      - "8080:8080"
+    restart: always
+    depends_on:
+      - mysqldb
+    networks:
+      - backend
+    environment: # Pass environment variables to the service
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/inventory?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false&&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
+
+volumes:
+  db_data: {}
+networks:
+  backend:
