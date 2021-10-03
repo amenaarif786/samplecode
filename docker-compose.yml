@@ -16,7 +16,7 @@ services:
     container_name: sampleapp
     build: .
     ports:
-      - "8080:8080"
+      - "9003:9003"
     restart: always
     depends_on:
       - mysqldb
